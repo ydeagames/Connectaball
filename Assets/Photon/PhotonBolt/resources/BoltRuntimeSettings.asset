@@ -46,7 +46,7 @@ MonoBehaviour:
     EnableIPv6: 0
   debugClientCount: 1
   debugStartPort: 50538
-  debugStartMapName: SampleMenu
+  debugStartMapName: SampleScene
   debugPlayAsServer: 0
   showDebugInfo: 0
   overrideTimeScale: 1

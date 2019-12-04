@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Bolt;
 using UnityEngine;
 
-public class PlayerController : Bolt.EntityBehaviour<ITransformState>
+public class Player : Bolt.EntityBehaviour<ITransformState>
 {
     Vector2 mouse;
     public int controller;
