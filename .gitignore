@@ -79,3 +79,5 @@ fmod_editor.log
 /Resources/FMOD/*/.restore/*
 !/Resources/FMOD/*/Build*
 
+# Photon
+Bolt_DebugStart_Build/

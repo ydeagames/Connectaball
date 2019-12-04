@@ -20,25 +20,33 @@ public class TrackTargets : MonoBehaviour
 
     void LateUpdate()
     {
-        Rect boundingBox = CalculateTargetsBoundingBox();
-        transform.position = CalculateCameraPosition(boundingBox);
-        cameraObj.orthographicSize = CalculateOrthographicSize(boundingBox);
+        var boundingBox = CalculateTargetsBoundingBox();
+        if (boundingBox.HasValue)
+        {
+            transform.position = CalculateCameraPosition(boundingBox.Value);
+            cameraObj.orthographicSize = CalculateOrthographicSize(boundingBox.Value);
+        }
     }
 
     /// <summary>
     /// Calculates a bounding box that contains all the targets.
     /// </summary>
     /// <returns>A Rect containing all the targets.</returns>
-    Rect CalculateTargetsBoundingBox()
+    Rect? CalculateTargetsBoundingBox()
     {
+        var players = GameObject.FindGameObjectsWithTag("Player");
+
+        if (players.Length <= 0)
+            return null;
+
         float minX = Mathf.Infinity;
         float maxX = Mathf.NegativeInfinity;
         float minY = Mathf.Infinity;
         float maxY = Mathf.NegativeInfinity;
 
-        foreach (Transform target in targets)
+        foreach (var target in players)
         {
-            Vector3 position = target.position;
+            Vector3 position = target.transform.position;
 
             minX = Mathf.Min(minX, position.x);
             minY = Mathf.Min(minY, position.y);
