@@ -14,7 +14,7 @@ namespace RollerBallBolt
         public override void SceneLoadLocalDone(string map)
         {
             // プレイヤー1を生成して、操作を担当します
-            BoltEntity be = BoltNetwork.Instantiate(BoltPrefabs.Player01);
+            BoltEntity be = BoltNetwork.Instantiate(BoltPrefabs.Player);
             be.transform.position = NetworkSceneManager.Instance.GetPlayerPosition(be.PrefabId.Value);
             be.TakeControl();
 
@@ -31,9 +31,19 @@ namespace RollerBallBolt
         public override void SceneLoadRemoteDone(BoltConnection connection)
         {
             // プレイヤー2を生成して、操作を接続先に任せます
-            BoltEntity be = BoltNetwork.Instantiate(BoltPrefabs.Player02);
+            BoltEntity be = BoltNetwork.Instantiate(BoltPrefabs.Player);
             be.transform.position = NetworkSceneManager.Instance.GetPlayerPosition(be.PrefabId.Value);
             be.AssignControl(connection);
+        }
+
+        public override void Disconnected(BoltConnection connection)
+        {
+            var bes = connection.HasControlOf;
+            foreach (var be in bes)
+            {
+                BoltNetwork.Destroy(be.gameObject);
+                break;
+            }
         }
     }
 }
