@@ -155,7 +155,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   hitLayer:
     serializedVersion: 2
-    m_Bits: 512
+    m_Bits: 0
   box: {fileID: 9106289430563280738}
 --- !u!61 &7704077552643377101
 BoxCollider2D:
