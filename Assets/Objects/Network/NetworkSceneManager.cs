@@ -28,6 +28,12 @@ namespace RollerBallBolt
             private set;
         }
 
+        public OBJECT_RECORD movingObjectPosition
+        {
+            get;
+            private set;
+        }
+
         private void Awake()
         {
             Instance = this;
@@ -49,6 +55,13 @@ namespace RollerBallBolt
             or.position = ball.transform.position;
             ballPosition = or;
             Destroy(ball);
+
+            GameObject movingObject = GameObject.FindGameObjectWithTag("MovingObject");
+            or.id = movingObject.GetComponent<BoltEntity>().PrefabId.Value;
+            or.position = movingObject.transform.position;
+            movingObjectPosition = or;
+            Destroy(movingObject);
+
         }
 
         /// <summary>
