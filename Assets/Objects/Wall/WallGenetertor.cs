@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class WallGenetertor : MonoBehaviour
 {
+    public BoxCollider2D box;
+
     enum eWALL
     {
         RIGHT,
@@ -20,24 +22,26 @@ public class WallGenetertor : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        for(int i=0;i<4;i++)
-        {
-            wall[i] = Instantiate(wallPrefab) as GameObject;
-        }
+        for (int i = 0; i < 4; i++)
+            wall[i] = Instantiate(wallPrefab, transform);
 
-        wall[(int)eWALL.RIGHT].transform.position = new Vector3(18.5f, -5, 0);
-        wall[(int)eWALL.LEFT].transform.position = new Vector3(-18.5f, -5, 0);
-        wall[(int)eWALL.TOP].transform.position = new Vector3(0, 6.5f, 0);
-        wall[(int)eWALL.TOP].transform.rotation = Quaternion.Euler(0, 0, 90);
-        wall[(int)eWALL.BOTTOM].transform.position = new Vector3(0, -17, 0);
-        wall[(int)eWALL.BOTTOM].transform.rotation = Quaternion.Euler(0, 0, 90);
-
-
+        wall[(int)eWALL.TOP].transform.localPosition = new Vector3(0, box.bounds.max.y, 0);
+        wall[(int)eWALL.TOP].transform.localRotation = Quaternion.Euler(0, 0, 0);
+        wall[(int)eWALL.TOP].transform.localScale = new Vector3(box.bounds.extents.x, 1, 1);
+        wall[(int)eWALL.LEFT].transform.localPosition = new Vector3(box.bounds.min.x, 0, 0);
+        wall[(int)eWALL.LEFT].transform.localRotation = Quaternion.Euler(0, 0, 90);
+        wall[(int)eWALL.LEFT].transform.localScale = new Vector3(box.bounds.extents.y, 1, 1);
+        wall[(int)eWALL.BOTTOM].transform.localPosition = new Vector3(0, box.bounds.min.y, 0);
+        wall[(int)eWALL.BOTTOM].transform.localRotation = Quaternion.Euler(0, 0, 180);
+        wall[(int)eWALL.BOTTOM].transform.localScale = new Vector3(box.bounds.extents.x, 1, 1);
+        wall[(int)eWALL.RIGHT].transform.localPosition = new Vector3(box.bounds.max.x, 0, 0);
+        wall[(int)eWALL.RIGHT].transform.localRotation = Quaternion.Euler(0, 0, 270);
+        wall[(int)eWALL.RIGHT].transform.localScale = new Vector3(box.bounds.extents.y, 1, 1);
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 }
