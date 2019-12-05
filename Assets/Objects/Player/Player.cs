@@ -5,15 +5,20 @@ using UnityEngine;
 
 public class Player : Bolt.EntityBehaviour<ITransformState>
 {
+    public LayerMask hitLayer;
+
     Rigidbody2D rigid;
-    float angularDrag = 0.99f;
+    public BoxCollider2D box;
+    float angularDrag = 0.9f;
+    float downSpeed = 0.5f;
 
     Vector2 myAcceleration;
     Vector2 sharedAcceleration;
     float myAngularAcceleration;
     float sharedAngularAcceleration;
     float sharedAngularVelocity;
-
+    bool myGrabbing;
+    bool sharedGrabbing;
 
     // Start is called before the first frame update
     void Start()
@@ -28,14 +33,35 @@ public class Player : Bolt.EntityBehaviour<ITransformState>
         myAcceleration.y = Input.GetAxis($"JoyY");
         myAngularAcceleration = Input.GetAxis($"JoyLR");
         //Debug.Log($"x:{mouse.x.ToString("F2")}, y:{mouse.y.ToString("F2")}");
+        Debug.Log(rigid.isKinematic);
+        //myGrabbing = box.IsTouchingLayers(hitLayer.value) && Input.GetButton($"JoyB");
+
+        if (box.IsTouchingLayers(hitLayer.value) && Input.GetButton($"JoyB"))
+        {
+            sharedGrabbing = true;
+        }
+        else
+        {
+            sharedGrabbing = false;
+        }
+
+        if (sharedGrabbing)
+        {
+            rigid.velocity = Vector2.zero;
+            rigid.angularVelocity = 0;
+        }
+
     }
 
     void FixedUpdate()
     {
-        rigid.AddForce(new Vector2(sharedAcceleration.x, sharedAcceleration.y), ForceMode2D.Impulse);
-        sharedAngularVelocity += sharedAngularAcceleration;
-        sharedAngularVelocity *= angularDrag;
-        transform.localEulerAngles = new Vector3(0, 0, transform.localEulerAngles.z + sharedAngularVelocity);
+        if (!sharedGrabbing)
+        {
+            rigid.AddForce(new Vector2(sharedAcceleration.x * downSpeed, sharedAcceleration.y * downSpeed), ForceMode2D.Impulse);
+            sharedAngularVelocity += sharedAngularAcceleration;
+            sharedAngularVelocity *= angularDrag;
+            transform.localEulerAngles = new Vector3(0, 0, transform.localEulerAngles.z + sharedAngularVelocity);
+        }
     }
 
     #region Network
@@ -60,6 +86,7 @@ public class Player : Bolt.EntityBehaviour<ITransformState>
 
         input.Acceleration = new Vector3(myAcceleration.x, myAcceleration.y, 0);
         input.AngularAcceleration = myAngularAcceleration;
+        input.GrabInput = myGrabbing;
 
         entity.QueueInput(input);
     }
@@ -81,6 +108,7 @@ public class Player : Bolt.EntityBehaviour<ITransformState>
             // Player2。送られてきたコマンドのデータを反映させます
             transform.localPosition = cmd.Result.Position;
             transform.localEulerAngles = new Vector3(0, 0, cmd.Result.Rotation);
+            sharedGrabbing = cmd.Result.GrabResult;
         }
         else
         {
@@ -92,6 +120,9 @@ public class Player : Bolt.EntityBehaviour<ITransformState>
             // 現在の座標を送信します
             cmd.Result.Position = transform.localPosition;
             cmd.Result.Rotation = transform.localRotation.z;
+
+            // ブロックをつかんでいるかの判定
+            cmd.Result.GrabResult = sharedGrabbing;
         }
     }
 
