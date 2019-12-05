@@ -5,10 +5,15 @@ using UnityEngine;
 
 public class Player : Bolt.EntityBehaviour<ITransformState>
 {
-    Vector2 mouse;
-    public int controller;
     Rigidbody2D rigid;
-    Vector2 force;
+    float angularDrag = 0.99f;
+
+    Vector2 myAcceleration;
+    Vector2 sharedAcceleration;
+    float myAngularAcceleration;
+    float sharedAngularAcceleration;
+    float sharedAngularVelocity;
+
 
     // Start is called before the first frame update
     void Start()
@@ -19,14 +24,18 @@ public class Player : Bolt.EntityBehaviour<ITransformState>
     // Update is called once per frame
     void Update()
     {
-        mouse.x = Input.GetAxis($"Joy{controller}X");
-        mouse.y = Input.GetAxis($"Joy{controller}Y");
-        //Debug.Log($"x:{x.ToString("F2")}, y:{y.ToString("F2")}");
+        myAcceleration.x = Input.GetAxis($"JoyX");
+        myAcceleration.y = Input.GetAxis($"JoyY");
+        myAngularAcceleration = Input.GetAxis($"JoyLR");
+        //Debug.Log($"x:{mouse.x.ToString("F2")}, y:{mouse.y.ToString("F2")}");
     }
 
     void FixedUpdate()
     {
-        rigid.AddForce(new Vector2(force.x, force.y), ForceMode2D.Impulse);
+        rigid.AddForce(new Vector2(sharedAcceleration.x, sharedAcceleration.y), ForceMode2D.Impulse);
+        sharedAngularVelocity += sharedAngularAcceleration;
+        sharedAngularVelocity *= angularDrag;
+        transform.localEulerAngles = new Vector3(0, 0, transform.localEulerAngles.z + sharedAngularVelocity);
     }
 
     #region Network
@@ -46,10 +55,11 @@ public class Player : Bolt.EntityBehaviour<ITransformState>
     /// </summary>
     public override void SimulateController()
     {
-        IRollerBallBoltCommandInput input = RollerBallBoltCommand.Create();
+        IPlayerCommandInput input = PlayerCommand.Create();
 
-        Vector3 data = new Vector3(mouse.x, mouse.y, 0);
-        input.Mouse = data;
+
+        input.Acceleration = new Vector3(myAcceleration.x, myAcceleration.y, 0);
+        input.AngularAcceleration = myAngularAcceleration;
 
         entity.QueueInput(input);
     }
@@ -64,21 +74,24 @@ public class Player : Bolt.EntityBehaviour<ITransformState>
     /// <param name="resetState">操作権を持っていたらtrue</param>
     public override void ExecuteCommand(Command command, bool resetState)
     {
-        RollerBallBoltCommand cmd = (RollerBallBoltCommand)command;
+        PlayerCommand cmd = (PlayerCommand)command;
 
         if (resetState)
         {
             // Player2。送られてきたコマンドのデータを反映させます
             transform.localPosition = cmd.Result.Position;
+            transform.localEulerAngles = new Vector3(0, 0, cmd.Result.Rotation);
         }
         else
         {
             // 入力を使ってオブジェクトを動かします
-            force = cmd.Input.Mouse;
+            sharedAcceleration = cmd.Input.Acceleration;
+            sharedAngularAcceleration = cmd.Input.AngularAcceleration;
 
             // ホストとクライアントの双方で呼び出されます
             // 現在の座標を送信します
             cmd.Result.Position = transform.localPosition;
+            cmd.Result.Rotation = transform.localRotation.z;
         }
     }
 
