@@ -4,7 +4,7 @@ using RollerBallBolt;
 namespace RollerBallBolt
 {
 
-    [BoltGlobalBehaviour(BoltNetworkModes.Server, "SampleScene")]
+    [BoltGlobalBehaviour(BoltNetworkModes.Server)]
     public class RollerBallBoltServerCallbacks : Bolt.GlobalEventListener
     {
         /// <summary>
@@ -15,7 +15,7 @@ namespace RollerBallBolt
         {
             // プレイヤー1を生成して、操作を担当します
             BoltEntity be = BoltNetwork.Instantiate(BoltPrefabs.Player);
-            be.transform.position = NetworkSceneManager.Instance.GetPlayerPosition(be.PrefabId.Value);
+            be.transform.position = NetworkSceneManager.Instance.GetPlayerPosition(0);
             be.TakeControl();
 
             // ボールを作ります
@@ -32,7 +32,7 @@ namespace RollerBallBolt
         {
             // プレイヤー2を生成して、操作を接続先に任せます
             BoltEntity be = BoltNetwork.Instantiate(BoltPrefabs.Player);
-            be.transform.position = NetworkSceneManager.Instance.GetPlayerPosition(be.PrefabId.Value);
+            be.transform.position = NetworkSceneManager.Instance.GetPlayerPosition((int)connection.ConnectionId);
             be.AssignControl(connection);
         }
 

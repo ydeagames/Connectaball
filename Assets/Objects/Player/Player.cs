@@ -9,14 +9,15 @@ public class Player : Bolt.EntityBehaviour<ITransformState>
 
     Rigidbody2D rigid;
     public BoxCollider2D box;
-    float angularDrag = 0.9f;
-    public float downSpeed = 0.5f;
+
+    public float speedMultiplier = 0.5f;
+    public float angularSpeedMultiplier = 0.5f;
+    public bool enableGripWithBlock;
 
     Vector2 myAcceleration;
     Vector2 sharedAcceleration;
     float myAngularAcceleration;
     float sharedAngularAcceleration;
-    float sharedAngularVelocity;
     bool myGrabbing;
     bool sharedGrabbing;
 
@@ -31,24 +32,25 @@ public class Player : Bolt.EntityBehaviour<ITransformState>
     {
         myAcceleration.x = Input.GetAxis($"JoyX");
         myAcceleration.y = Input.GetAxis($"JoyY");
-        myAngularAcceleration = Input.GetAxis($"JoyLR");
         myGrabbing = Input.GetButton($"JoyB");
+
+        myAngularAcceleration = Input.GetAxis($"JoyLR");
     }
 
     void FixedUpdate()
     {
         //Debug.Log($"touch:{box.IsTouchingLayers(hitLayer.value)}");
-        if (sharedGrabbing && box.IsTouchingLayers(hitLayer.value))
+        if (sharedGrabbing && (!enableGripWithBlock || box.IsTouchingLayers(hitLayer.value)))
         {
+            rigid.isKinematic = true;
             rigid.velocity = Vector2.zero;
             rigid.angularVelocity = 0;
         }
         else
         {
-            rigid.AddForce(new Vector2(sharedAcceleration.x * downSpeed, sharedAcceleration.y * downSpeed), ForceMode2D.Impulse);
-            sharedAngularVelocity += sharedAngularAcceleration;
-            sharedAngularVelocity *= angularDrag;
-            transform.localEulerAngles = new Vector3(0, 0, transform.localEulerAngles.z + sharedAngularVelocity);
+            rigid.isKinematic = false;
+            rigid.AddForce(new Vector2(sharedAcceleration.x * speedMultiplier, sharedAcceleration.y * speedMultiplier), ForceMode2D.Impulse);
+            rigid.AddTorque(sharedAngularAcceleration * angularSpeedMultiplier, ForceMode2D.Impulse);
         }
     }
 
@@ -108,7 +110,7 @@ public class Player : Bolt.EntityBehaviour<ITransformState>
             // ホストとクライアントの双方で呼び出されます
             // 現在の座標を送信します
             cmd.Result.Position = transform.localPosition;
-            cmd.Result.Rotation = transform.localRotation.z;
+            cmd.Result.Rotation = transform.localEulerAngles.z;
             cmd.Result.GrabResult = sharedGrabbing;
         }
     }

@@ -11,7 +11,7 @@ public class SnoneGenerator : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+
     }
 
     // Update is called once per frame
@@ -23,17 +23,18 @@ public class SnoneGenerator : MonoBehaviour
         {
             this.delta = 0;
             //GameObject go = Instantiate(StonePrefab) as GameObject;
-            if (BoltNetwork.IsRunning)
-            {
-                var go = BoltNetwork.Instantiate(BoltPrefabs.StonePrefab);
+            if (BoltNetwork.IsServer)
+                if (BoltNetwork.IsRunning)
+                {
+                    var go = BoltNetwork.Instantiate(BoltPrefabs.StonePrefab);
 
-                Vector3 pos = this.transform.position;
+                    Vector3 pos = this.transform.position;
 
-                pos.y -= 0.5f;
+                    pos.y -= 0.5f;
 
-                go.transform.position = pos;
-            }
+                    go.transform.position = pos;
+                }
         }
-        
+
     }
 }

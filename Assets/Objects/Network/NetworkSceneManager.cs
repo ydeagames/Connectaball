@@ -6,7 +6,6 @@ namespace RollerBallBolt
 {
     public struct OBJECT_RECORD
     {
-        public int id;
         public Vector3 position;
     }
 
@@ -44,14 +43,12 @@ namespace RollerBallBolt
             OBJECT_RECORD or;
             foreach(GameObject go in gos)
             {
-                or.id = go.GetComponent<BoltEntity>().PrefabId.Value;
                 or.position = go.transform.position;
                 playerPositions.Add(or);
                 Destroy(go);
             }
 
             GameObject ball = GameObject.FindGameObjectWithTag("Ball");
-            or.id = ball.GetComponent<BoltEntity>().PrefabId.Value;
             or.position = ball.transform.position;
             ballPosition = or;
             Destroy(ball);
@@ -71,12 +68,9 @@ namespace RollerBallBolt
         /// <returns>座標を返します</returns>
         public Vector3 GetPlayerPosition(int id)
         {
-            foreach(OBJECT_RECORD or in playerPositions)
+            if (0 <= id && id < playerPositions.Count)
             {
-                if (or.id == id)
-                {
-                    return or.position;
-                }
+                return playerPositions[id].position;
             }
             return Vector3.zero;
         }
