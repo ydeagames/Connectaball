@@ -7,6 +7,7 @@ TagManager:
   - Ball
   - Block
   - MovingObject
+  - Wall
   layers:
   - Default
   - TransparentFX
