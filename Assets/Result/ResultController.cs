@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class TitleController : MonoBehaviour
+public class ResultController : MonoBehaviour
 {
     // Start is called before the first frame update
     void Start()
@@ -19,7 +19,7 @@ public class TitleController : MonoBehaviour
 
     public void OnClick()
     {
-        //ゲームシーンに遷移
-        SceneManager.LoadScene("SampleScene");
+        //タイトルシーンに遷移
+        SceneManager.LoadScene("TitleScene");
     }
 }
