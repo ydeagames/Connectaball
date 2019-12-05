@@ -22,13 +22,12 @@ namespace RollerBallBolt
             get;
             private set;
         }
-        public OBJECT_RECORD ballPosition
+        public List<OBJECT_RECORD> movingObjectPositions
         {
             get;
             private set;
         }
-
-        public OBJECT_RECORD movingObjectPosition
+        public OBJECT_RECORD ballPosition
         {
             get;
             private set;
@@ -39,6 +38,7 @@ namespace RollerBallBolt
             Instance = this;
 
             playerPositions = new List<OBJECT_RECORD>();
+            movingObjectPositions = new List<OBJECT_RECORD>();
 
             GameObject[] gos = GameObject.FindGameObjectsWithTag("Player");
             OBJECT_RECORD or;
@@ -50,18 +50,20 @@ namespace RollerBallBolt
                 Destroy(go);
             }
 
+            GameObject[] mos = GameObject.FindGameObjectsWithTag("MovingObject");
+            foreach (GameObject mo in mos)
+            {
+                or.id = mo.GetComponent<BoltEntity>().PrefabId.Value;
+                or.position = mo.transform.position;
+                movingObjectPositions.Add(or);
+                Destroy(mo);
+            }
+
             GameObject ball = GameObject.FindGameObjectWithTag("Ball");
             or.id = ball.GetComponent<BoltEntity>().PrefabId.Value;
             or.position = ball.transform.position;
             ballPosition = or;
             Destroy(ball);
-
-            //GameObject movingObject = GameObject.FindGameObjectWithTag("MovingObject");
-            //or.id = movingObject.GetComponent<BoltEntity>().PrefabId.Value;
-            //or.position = movingObject.transform.position;
-            //movingObjectPosition = or;
-            //Destroy(movingObject);
-
         }
 
         /// <summary>
@@ -73,6 +75,18 @@ namespace RollerBallBolt
         public Vector3 GetPlayerPosition(int id)
         {
             foreach(OBJECT_RECORD or in playerPositions)
+            {
+                if (or.id == id)
+                {
+                    return or.position;
+                }
+            }
+            return Vector3.zero;
+        }
+
+        public Vector3 GetMovingObjectPosition(int id)
+        {
+            foreach (OBJECT_RECORD or in movingObjectPositions)
             {
                 if (or.id == id)
                 {
