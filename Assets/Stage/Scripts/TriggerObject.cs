@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TriggerObject : MonoBehaviour
+public class TriggerObject : Bolt.EntityBehaviour<ITransformState>
 {
     private string m_ballTag = "Ball";
     private bool m_isOn = false;
@@ -42,5 +42,13 @@ public class TriggerObject : MonoBehaviour
                 m_isOn = true;
             }
         }
+    }
+
+    /// <summary>
+    /// transformをIPlayerStateのTranformに割り当てます。
+    /// </summary>
+    public override void Attached()
+    {
+        state.SetTransforms(state.Transform, transform);
     }
 }

@@ -18,7 +18,8 @@ namespace RollerBallBolt
             private set;
         }
 
-        public List<OBJECT_RECORD> playerPositions {
+        public List<OBJECT_RECORD> playerPositions
+        {
             get;
             private set;
         }
