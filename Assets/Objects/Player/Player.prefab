@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 864583928942587202}
   - component: {fileID: 9106289430563280738}
+  - component: {fileID: 8631262093321978052}
   m_Layer: 0
   m_Name: CollisionDetector
   m_TagString: Untagged
@@ -57,6 +58,27 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 0.16, y: 0.16}
   m_EdgeRadius: 0
+--- !u!50 &8631262093321978052
+Rigidbody2D:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1277797895326298103}
+  m_BodyType: 1
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDrag: 0
+  m_AngularDrag: 0.05
+  m_GravityScale: 1
+  m_Material: {fileID: 0}
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
+  m_Constraints: 0
 --- !u!1 &7704077552643377102
 GameObject:
   m_ObjectHideFlags: 0
@@ -155,7 +177,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   hitLayer:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 512
   box: {fileID: 9106289430563280738}
 --- !u!61 &7704077552643377101
 BoxCollider2D:
@@ -216,7 +238,7 @@ MonoBehaviour:
   m_Script: {fileID: -36112512, guid: 5b00bf8b25851d440940a40ec23344f4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _sceneGuid: 
+  _sceneGuid: 5fcc283e-14ff-433e-8141-039df54ba304
   _serializerGuid: e157fd67-758e-4a0c-9d08-926adacbd591
   _prefabId: 2
   _updateRate: 1

@@ -32,30 +32,18 @@ public class Player : Bolt.EntityBehaviour<ITransformState>
         myAcceleration.x = Input.GetAxis($"JoyX");
         myAcceleration.y = Input.GetAxis($"JoyY");
         myAngularAcceleration = Input.GetAxis($"JoyLR");
-        //Debug.Log($"x:{mouse.x.ToString("F2")}, y:{mouse.y.ToString("F2")}");
-        Debug.Log(rigid.isKinematic);
-        //myGrabbing = box.IsTouchingLayers(hitLayer.value) && Input.GetButton($"JoyB");
-
-        if (box.IsTouchingLayers(hitLayer.value) && Input.GetButton($"JoyB"))
-        {
-            sharedGrabbing = true;
-        }
-        else
-        {
-            sharedGrabbing = false;
-        }
-
-        if (sharedGrabbing)
-        {
-            rigid.velocity = Vector2.zero;
-            rigid.angularVelocity = 0;
-        }
-
+        myGrabbing = Input.GetButton($"JoyB");
     }
 
     void FixedUpdate()
     {
-        if (!sharedGrabbing)
+        Debug.Log($"touch:{box.IsTouchingLayers(hitLayer.value)}");
+        if (sharedGrabbing && box.IsTouchingLayers(hitLayer.value))
+        {
+            rigid.velocity = Vector2.zero;
+            rigid.angularVelocity = 0;
+        }
+        else
         {
             rigid.AddForce(new Vector2(sharedAcceleration.x * downSpeed, sharedAcceleration.y * downSpeed), ForceMode2D.Impulse);
             sharedAngularVelocity += sharedAngularAcceleration;
@@ -82,7 +70,6 @@ public class Player : Bolt.EntityBehaviour<ITransformState>
     public override void SimulateController()
     {
         IPlayerCommandInput input = PlayerCommand.Create();
-
 
         input.Acceleration = new Vector3(myAcceleration.x, myAcceleration.y, 0);
         input.AngularAcceleration = myAngularAcceleration;
@@ -115,13 +102,13 @@ public class Player : Bolt.EntityBehaviour<ITransformState>
             // 入力を使ってオブジェクトを動かします
             sharedAcceleration = cmd.Input.Acceleration;
             sharedAngularAcceleration = cmd.Input.AngularAcceleration;
+            // ブロックをつかんでいるかの判定
+            sharedGrabbing = cmd.Input.GrabInput;
 
             // ホストとクライアントの双方で呼び出されます
             // 現在の座標を送信します
             cmd.Result.Position = transform.localPosition;
             cmd.Result.Rotation = transform.localRotation.z;
-
-            // ブロックをつかんでいるかの判定
             cmd.Result.GrabResult = sharedGrabbing;
         }
     }
