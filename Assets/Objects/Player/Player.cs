@@ -10,7 +10,7 @@ public class Player : Bolt.EntityBehaviour<ITransformState>
     Rigidbody2D rigid;
     public BoxCollider2D box;
     float angularDrag = 0.9f;
-    float downSpeed = 0.5f;
+    public float downSpeed = 0.5f;
 
     Vector2 myAcceleration;
     Vector2 sharedAcceleration;
@@ -37,7 +37,7 @@ public class Player : Bolt.EntityBehaviour<ITransformState>
 
     void FixedUpdate()
     {
-        Debug.Log($"touch:{box.IsTouchingLayers(hitLayer.value)}");
+        //Debug.Log($"touch:{box.IsTouchingLayers(hitLayer.value)}");
         if (sharedGrabbing && box.IsTouchingLayers(hitLayer.value))
         {
             rigid.velocity = Vector2.zero;

@@ -179,6 +179,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 512
   box: {fileID: 9106289430563280738}
+  downSpeed: 0.5
 --- !u!61 &7704077552643377101
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -238,7 +239,7 @@ MonoBehaviour:
   m_Script: {fileID: -36112512, guid: 5b00bf8b25851d440940a40ec23344f4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _sceneGuid: 5fcc283e-14ff-433e-8141-039df54ba304
+  _sceneGuid: 
   _serializerGuid: e157fd67-758e-4a0c-9d08-926adacbd591
   _prefabId: 2
   _updateRate: 1
