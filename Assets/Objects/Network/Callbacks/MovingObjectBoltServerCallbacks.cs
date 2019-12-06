@@ -12,13 +12,13 @@ namespace RollerBallBolt
         /// <param name="map"></param>
         public override void SceneLoadLocalDone(string map)
         {
-            // 落下する足場を生成します
-            BoltEntity be = BoltNetwork.Instantiate(BoltPrefabs.FallFloorType01);
-            be.transform.position = NetworkSceneManager.Instance.GetMovingObjectPosition(be.PrefabId.Value);
+            //// 落下する足場を生成します
+            //BoltEntity be = BoltNetwork.Instantiate(BoltPrefabs.FallFloorType01);
+            //be.transform.position = NetworkSceneManager.Instance.GetMovingObjectPosition(be.PrefabId.Value);
 
-            // 移動するオブジェクトを生成します
-            be = BoltNetwork.Instantiate(BoltPrefabs.MovingBoxType01);
-            be.transform.position = NetworkSceneManager.Instance.GetMovingObjectPosition(be.PrefabId.Value);
+            //// 移動するオブジェクトを生成します
+            //be = BoltNetwork.Instantiate(BoltPrefabs.MovingBoxType01);
+            //be.transform.position = NetworkSceneManager.Instance.GetMovingObjectPosition(be.PrefabId.Value);
         }
     }
 }
