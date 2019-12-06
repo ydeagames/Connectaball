@@ -132,8 +132,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b39d53a7e21ac2949b6a9f60722a2cae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  BallTouch: {fileID: 8300000, guid: b9093b8140a420e4ba80df4fb431c42e, type: 3}
-  BallDeath: {fileID: 8300000, guid: dcfac7eb0408bb64784547cea9ac3b05, type: 3}
 --- !u!114 &4696127217160654781
 MonoBehaviour:
   m_ObjectHideFlags: 0
