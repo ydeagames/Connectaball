@@ -5,6 +5,8 @@ using UnityEngine;
 public class WallGenetertor : MonoBehaviour
 {
     public BoxCollider2D box;
+    public GameObject border;
+    public GameObject background;
 
     enum eWALL
     {
@@ -14,8 +16,7 @@ public class WallGenetertor : MonoBehaviour
         BOTTOM,
     }
 
-    [SerializeField]
-    GameObject wallPrefab;
+    public GameObject wallPrefab;
 
     GameObject[] wall = new GameObject[4];
 
@@ -37,6 +38,21 @@ public class WallGenetertor : MonoBehaviour
         wall[(int)eWALL.RIGHT].transform.localPosition = new Vector3(box.bounds.max.x, 0, 0);
         wall[(int)eWALL.RIGHT].transform.localRotation = Quaternion.Euler(0, 0, 270);
         wall[(int)eWALL.RIGHT].transform.localScale = new Vector3(box.bounds.extents.y, 1, 1);
+
+        if (border != null)
+        {
+            var sprite = border.GetComponent<SpriteRenderer>();
+            sprite.size = new Vector2(box.bounds.size.x / border.transform.localScale.x, box.bounds.size.y / border.transform.localScale.y);
+            sprite.size += new Vector2(10, 12);
+            border.transform.position = box.bounds.center;
+        }
+
+        if (background != null)
+        {
+            var sprite = background.GetComponent<SpriteRenderer>();
+            sprite.size = new Vector2(box.bounds.size.x / background.transform.localScale.x, box.bounds.size.y / background.transform.localScale.y);
+            background.transform.position = box.bounds.center;
+        }
     }
 
     // Update is called once per frame
