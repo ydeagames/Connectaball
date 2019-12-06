@@ -180,6 +180,8 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 512
   box: {fileID: 9106289430563280738}
+  PlayerBounce: {fileID: 8300000, guid: cece5d3cb899fcc4cb570e608f5c4ebe, type: 3}
+  PlayerGrab: {fileID: 8300000, guid: 20c76551159328046ae609d88f438a8b, type: 3}
   speedMultiplier: 0.025
   angularSpeedMultiplier: -0.025
   enableGripWithBlock: 0
