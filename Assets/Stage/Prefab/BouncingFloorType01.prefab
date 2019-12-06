@@ -10,7 +10,7 @@ PrefabInstance:
     - target: {fileID: 7231698485683270153, guid: 89d5b4f585b3a7542bce6f92dbf2f64b,
         type: 3}
       propertyPath: m_Name
-      value: FloorType01
+      value: BouncingFloorType01
       objectReference: {fileID: 0}
     - target: {fileID: 7231698485683270156, guid: 89d5b4f585b3a7542bce6f92dbf2f64b,
         type: 3}
@@ -67,5 +67,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7231698485683270154, guid: 89d5b4f585b3a7542bce6f92dbf2f64b,
+        type: 3}
+      propertyPath: m_Material
+      value: 
+      objectReference: {fileID: 6200000, guid: fbfe6c05274ae0d46807b70eea791984, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 89d5b4f585b3a7542bce6f92dbf2f64b, type: 3}

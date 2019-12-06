@@ -14,9 +14,9 @@ GameObject:
   - component: {fileID: 3154954503405921905}
   - component: {fileID: 8391717847798511029}
   - component: {fileID: 6970471189548956873}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: MovingBoxType01
-  m_TagString: Untagged
+  m_TagString: MovingObject
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -143,15 +143,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_IsVertical: 0
-  m_Speed: 0
+  m_Speed: 2
   m_RaySize: 1
-  m_MaxRayDistance: 0
+  m_MaxRayDistance: 10
   m_Collidable:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 4294967295
   m_StaticCollidable:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 4294967295
 --- !u!114 &6970471189548956873
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -165,8 +165,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _sceneGuid: 
-  _serializerGuid: 00000000-0000-0000-0000-000000000000
-  _prefabId: 8
+  _serializerGuid: e157fd67-758e-4a0c-9d08-926adacbd591
+  _prefabId: 7
   _updateRate: 1
   _autoFreezeProxyFrames: 0
   _clientPredicted: 1
