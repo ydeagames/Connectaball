@@ -7,17 +7,36 @@ public class Goal : MonoBehaviour
     [SerializeField]
     private Fade m_fade = null;
 
+    private bool m_isFirst;
+
     // Start is called before the first frame update
     void Start()
     {
+        m_isFirst = false;
         // 0.5秒後にフェードアウトする
         StartCoroutine(this.DelayMethod(0.5f, FadeOutMethod));
     }
 
-    // Update is called once per frame
-    void Update()
+    private void OnCollisionEnter2D(Collision2D collision)
     {
-        
+        TransitionAction();
+    }
+
+    public void TransitionAction()
+    {
+        if (!m_isFirst)
+        {
+            FadeInMethod();
+            // 1秒後に遷移する
+            StartCoroutine(this.DelayMethod(1.0f, TransitionToClearScene));
+            m_isFirst = true;
+        }
+    }
+
+    // ClearScene へ遷移
+    private void TransitionToClearScene()
+    {
+        BoltNetwork.LoadScene("ClearScene");
     }
 
     private void FadeInMethod()
