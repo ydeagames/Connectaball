@@ -43,7 +43,7 @@ public class WallGenetertor : MonoBehaviour
         {
             var sprite = border.GetComponent<SpriteRenderer>();
             sprite.size = new Vector2(box.bounds.size.x / border.transform.localScale.x, box.bounds.size.y / border.transform.localScale.y);
-            sprite.size += new Vector2(10, 12);
+            sprite.size += new Vector2(2, 2);
             border.transform.position = box.bounds.center;
         }
 

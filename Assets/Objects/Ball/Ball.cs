@@ -7,6 +7,8 @@ namespace RollerBallBolt
     public class Ball : Bolt.EntityBehaviour<ITransformState>
     {
         Vector3 startPos;
+        public AudioClip BallTouch;
+        public AudioClip BallDeath;
 
         private void Start()
         {
@@ -25,8 +27,13 @@ namespace RollerBallBolt
         {
             if(collision.gameObject.tag == "Wall")
             {
+                AudioSource.PlayClipAtPoint(BallDeath, transform.position);
                 this.transform.position = startPos;
                 this.GetComponent<Rigidbody2D>().velocity = Vector3.zero;
+            }
+            else
+            {
+                AudioSource.PlayClipAtPoint(BallTouch, transform.position);
             }
         }
     }

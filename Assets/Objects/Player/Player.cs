@@ -10,6 +10,8 @@ public class Player : Bolt.EntityBehaviour<ITransformState>
 
     Rigidbody2D rigid;
     public BoxCollider2D box;
+    public AudioClip PlayerBounce;
+    public AudioClip PlayerGrab;
 
     public float speedMultiplier = 0.5f;
     public float angularSpeedMultiplier = 0.5f;
@@ -34,8 +36,19 @@ public class Player : Bolt.EntityBehaviour<ITransformState>
         myAcceleration.x = Input.GetAxis($"JoyX");
         myAcceleration.y = Input.GetAxis($"JoyY");
         myGrabbing = Input.GetButton($"JoyB");
-
+        if(Input.GetButtonDown($"JoyB"))
+        {
+            AudioSource.PlayClipAtPoint(PlayerGrab, transform.position);
+        }
         myAngularAcceleration = Input.GetAxis($"JoyLR");
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.tag == "Wall")
+        {
+            AudioSource.PlayClipAtPoint(PlayerBounce, transform.position);
+        }
     }
 
     void FixedUpdate()
