@@ -8,6 +8,7 @@ TagManager:
   - Block
   - MovingObject
   - Wall
+  - Goal
   layers:
   - Default
   - TransparentFX
