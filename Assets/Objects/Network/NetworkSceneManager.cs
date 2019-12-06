@@ -52,7 +52,6 @@ namespace RollerBallBolt
             GameObject[] mos = GameObject.FindGameObjectsWithTag("MovingObject");
             foreach (GameObject mo in mos)
             {
-                or.id = mo.GetComponent<BoltEntity>().PrefabId.Value;
                 or.position = mo.transform.position;
                 movingObjectPositions.Add(or);
                 Destroy(mo);
@@ -81,12 +80,9 @@ namespace RollerBallBolt
 
         public Vector3 GetMovingObjectPosition(int id)
         {
-            foreach (OBJECT_RECORD or in movingObjectPositions)
+            if (0 <= id && id < movingObjectPositions.Count)
             {
-                if (or.id == id)
-                {
-                    return or.position;
-                }
+                return movingObjectPositions[id].position;
             }
             return Vector3.zero;
         }
