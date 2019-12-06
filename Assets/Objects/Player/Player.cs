@@ -5,15 +5,21 @@ using UnityEngine;
 
 public class Player : Bolt.EntityBehaviour<ITransformState>
 {
+    public LayerMask hitLayer;
+
     Rigidbody2D rigid;
-    float angularDrag = 0.99f;
+    public BoxCollider2D box;
+
+    public float speedMultiplier = 0.5f;
+    public float angularSpeedMultiplier = 0.5f;
+    public bool enableGripWithBlock;
 
     Vector2 myAcceleration;
     Vector2 sharedAcceleration;
     float myAngularAcceleration;
     float sharedAngularAcceleration;
-    float sharedAngularVelocity;
-
+    bool myGrabbing;
+    bool sharedGrabbing;
 
     // Start is called before the first frame update
     void Start()
@@ -26,16 +32,26 @@ public class Player : Bolt.EntityBehaviour<ITransformState>
     {
         myAcceleration.x = Input.GetAxis($"JoyX");
         myAcceleration.y = Input.GetAxis($"JoyY");
+        myGrabbing = Input.GetButton($"JoyB");
+
         myAngularAcceleration = Input.GetAxis($"JoyLR");
-        //Debug.Log($"x:{mouse.x.ToString("F2")}, y:{mouse.y.ToString("F2")}");
     }
 
     void FixedUpdate()
     {
-        rigid.AddForce(new Vector2(sharedAcceleration.x, sharedAcceleration.y), ForceMode2D.Impulse);
-        sharedAngularVelocity += sharedAngularAcceleration;
-        sharedAngularVelocity *= angularDrag;
-        transform.localEulerAngles = new Vector3(0, 0, transform.localEulerAngles.z + sharedAngularVelocity);
+        //Debug.Log($"touch:{box.IsTouchingLayers(hitLayer.value)}");
+        if (sharedGrabbing && (!enableGripWithBlock || box.IsTouchingLayers(hitLayer.value)))
+        {
+            rigid.isKinematic = true;
+            rigid.velocity = Vector2.zero;
+            rigid.angularVelocity = 0;
+        }
+        else
+        {
+            rigid.isKinematic = false;
+            rigid.AddForce(new Vector2(sharedAcceleration.x * speedMultiplier, sharedAcceleration.y * speedMultiplier), ForceMode2D.Impulse);
+            rigid.AddTorque(sharedAngularAcceleration * angularSpeedMultiplier, ForceMode2D.Impulse);
+        }
     }
 
     #region Network
@@ -57,9 +73,9 @@ public class Player : Bolt.EntityBehaviour<ITransformState>
     {
         IPlayerCommandInput input = PlayerCommand.Create();
 
-
         input.Acceleration = new Vector3(myAcceleration.x, myAcceleration.y, 0);
         input.AngularAcceleration = myAngularAcceleration;
+        input.GrabInput = myGrabbing;
 
         entity.QueueInput(input);
     }
@@ -81,17 +97,21 @@ public class Player : Bolt.EntityBehaviour<ITransformState>
             // Player2。送られてきたコマンドのデータを反映させます
             transform.localPosition = cmd.Result.Position;
             transform.localEulerAngles = new Vector3(0, 0, cmd.Result.Rotation);
+            sharedGrabbing = cmd.Result.GrabResult;
         }
         else
         {
             // 入力を使ってオブジェクトを動かします
             sharedAcceleration = cmd.Input.Acceleration;
             sharedAngularAcceleration = cmd.Input.AngularAcceleration;
+            // ブロックをつかんでいるかの判定
+            sharedGrabbing = cmd.Input.GrabInput;
 
             // ホストとクライアントの双方で呼び出されます
             // 現在の座標を送信します
             cmd.Result.Position = transform.localPosition;
-            cmd.Result.Rotation = transform.localRotation.z;
+            cmd.Result.Rotation = transform.localEulerAngles.z;
+            cmd.Result.GrabResult = sharedGrabbing;
         }
     }
 

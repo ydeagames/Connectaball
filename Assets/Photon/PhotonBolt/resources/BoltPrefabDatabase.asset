@@ -20,5 +20,9 @@ MonoBehaviour:
   - {fileID: 7704077552643377102, guid: ea8da9f61a7fdca49b7ba7f2cef1ee7c, type: 3}
   - {fileID: 7704077552643377102, guid: d3088b50d27b31946a336bbdce783b24, type: 3}
   - {fileID: 7704077552643377102, guid: 49d5faf39431cdc4db61df309500fbdc, type: 3}
+  - {fileID: 3478069567363480357, guid: 21ff272b3d5e7554cb70c21fea371794, type: 3}
+  - {fileID: 6828378296149930315, guid: b83db18eb55b4664d8ae04ca6095b84d, type: 3}
+  - {fileID: 783810716873144117, guid: 07a52ad7569ac364ca3d0d7c7f00d5d3, type: 3}
+  - {fileID: 6023144506724229388, guid: 5fc0ba8bfeca1834082d5f4b13342387, type: 3}
   SearchPaths:
   - Assets
