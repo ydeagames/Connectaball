@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class Player : Bolt.EntityBehaviour<ITransformState>
 {
+    public SpriteRenderer spriteBack;
     public LayerMask hitLayer;
 
     Rigidbody2D rigid;
@@ -113,6 +114,8 @@ public class Player : Bolt.EntityBehaviour<ITransformState>
             cmd.Result.Rotation = transform.localEulerAngles.z;
             cmd.Result.GrabResult = sharedGrabbing;
         }
+
+        spriteBack.color = RollerBallBolt.NetworkSceneManager.Instance.colors.GetColor(state.Id);
     }
 
     #endregion Network

@@ -11,6 +11,8 @@ namespace RollerBallBolt
 
     public class NetworkSceneManager : MonoBehaviour
     {
+        public PlayerColors colors;
+
         public static NetworkSceneManager Instance
         {
             get;
