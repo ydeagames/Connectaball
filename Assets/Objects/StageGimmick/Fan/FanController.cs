@@ -4,60 +4,34 @@ using UnityEngine;
 
 public class FanController : MonoBehaviour
 {
-    GameObject ball;
-    Rigidbody2D ballRB;
-    Vector2 force;
-
-    bool nowFan = false;
-    bool beforFan = false;
+    public Vector2 force;
+    public BoxCollider2D box;
+    public GameObject model;
+    public LayerMask targetMask;
 
     // Start is called before the first frame update
     void Start()
     {
-        this.ball = GameObject.Find("Ball");
-        this.ballRB = ball.GetComponent<Rigidbody2D>();
-
-        force = new Vector2(0.0f, 0.0f);
+        //force = new Vector2(0.0f, 0.0f);
     }
 
     // Update is called once per frame
     void Update()
     {
-        beforFan = nowFan;
-
-        // 扇風機の上にボールがあるか判定
-        if (
-            ball.transform.position.y > this.transform.position.y &&
-            ball.transform.position.x > this.transform.position.x - 2.0f &&
-            ball.transform.position.x < this.transform.position.x + 2.0f
-            )
+        var filter = new ContactFilter2D() { layerMask = targetMask.value, useLayerMask = true };
+        var results = new Collider2D[50];
+        var resultCount = box.OverlapCollider(filter, results);
+        for (int i = 0; i < resultCount; i++)
         {
-            nowFan = true;
-        }
-        else
-        {
-            nowFan = false;
-        }
+            var ball = results[i];
 
-        // 扇風機の上にいるとき、ボールが上昇する
-        if (nowFan)
-        {
-            force.y += 0.1f;
-            ballRB.AddForce(force);
-        }
+            var ballRB = ball.GetComponent<Rigidbody2D>();
 
-        // 扇風機の上から外れたら、forceをリセット
-        if (!nowFan && beforFan)
-        {
-            Vector2 zero = new Vector2(0.0f, 0.0f);
-            force = zero;
+            //force.y += 0.1f;
+            ballRB.AddForce(transform.TransformDirection(force));
         }
-        
-
 
         // 扇風機の回転
-        this.transform.Rotate(0.0f, 10.0f, 0.0f);
-
-
+        model.transform.Rotate(0.0f, 10.0f, 0.0f);
     }
 }

@@ -4,14 +4,14 @@ using UnityEngine;
 
 public class SnoneGenerator : MonoBehaviour
 {
-    public GameObject StonePrefab;
-    float span = 3.0f;
-    float delta = 0;
+    //public GameObject StonePrefab;
+    public float span = 3.0f;
+    public float delta = 0;
 
     // Start is called before the first frame update
     void Start()
     {
-        
+
     }
 
     // Update is called once per frame
@@ -22,15 +22,19 @@ public class SnoneGenerator : MonoBehaviour
         if (this.delta > this.span)
         {
             this.delta = 0;
-            GameObject go = Instantiate(StonePrefab) as GameObject;
+            //GameObject go = Instantiate(StonePrefab) as GameObject;
+            if (BoltNetwork.IsServer)
+                if (BoltNetwork.IsRunning)
+                {
+                    var go = BoltNetwork.Instantiate(BoltPrefabs.StonePrefab);
 
-            Vector3 pos = this.transform.position;
+                    Vector3 pos = this.transform.position;
 
-            pos.y -= 0.5f;
+                    pos.y -= 0.5f;
 
-            go.transform.position = pos;
-            
+                    go.transform.position = pos;
+                }
         }
-        
+
     }
 }

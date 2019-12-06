@@ -6,6 +6,8 @@ TagManager:
   tags:
   - Ball
   - Block
+  - MovingObject
+  - Wall
   layers:
   - Default
   - TransparentFX
@@ -18,7 +20,7 @@ TagManager:
   - Player
   - Block
   - Ball
-  - 
+  - MovingObject
   - 
   - 
   - 

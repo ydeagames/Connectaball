@@ -5,10 +5,21 @@ using UnityEngine;
 
 public class Player : Bolt.EntityBehaviour<ITransformState>
 {
-    Vector2 mouse;
-    public int controller;
+    public LayerMask hitLayer;
+
     Rigidbody2D rigid;
-    Vector2 force;
+    public BoxCollider2D box;
+
+    public float speedMultiplier = 0.5f;
+    public float angularSpeedMultiplier = 0.5f;
+    public bool enableGripWithBlock;
+
+    Vector2 myAcceleration;
+    Vector2 sharedAcceleration;
+    float myAngularAcceleration;
+    float sharedAngularAcceleration;
+    bool myGrabbing;
+    bool sharedGrabbing;
 
     // Start is called before the first frame update
     void Start()
@@ -19,14 +30,28 @@ public class Player : Bolt.EntityBehaviour<ITransformState>
     // Update is called once per frame
     void Update()
     {
-        mouse.x = Input.GetAxis($"Joy{controller}X");
-        mouse.y = Input.GetAxis($"Joy{controller}Y");
-        //Debug.Log($"x:{x.ToString("F2")}, y:{y.ToString("F2")}");
+        myAcceleration.x = Input.GetAxis($"JoyX");
+        myAcceleration.y = Input.GetAxis($"JoyY");
+        myGrabbing = Input.GetButton($"JoyB");
+
+        myAngularAcceleration = Input.GetAxis($"JoyLR");
     }
 
     void FixedUpdate()
     {
-        rigid.AddForce(new Vector2(force.x, force.y), ForceMode2D.Impulse);
+        //Debug.Log($"touch:{box.IsTouchingLayers(hitLayer.value)}");
+        if (sharedGrabbing && (!enableGripWithBlock || box.IsTouchingLayers(hitLayer.value)))
+        {
+            rigid.isKinematic = true;
+            rigid.velocity = Vector2.zero;
+            rigid.angularVelocity = 0;
+        }
+        else
+        {
+            rigid.isKinematic = false;
+            rigid.AddForce(new Vector2(sharedAcceleration.x * speedMultiplier, sharedAcceleration.y * speedMultiplier), ForceMode2D.Impulse);
+            rigid.AddTorque(sharedAngularAcceleration * angularSpeedMultiplier, ForceMode2D.Impulse);
+        }
     }
 
     #region Network
@@ -46,10 +71,11 @@ public class Player : Bolt.EntityBehaviour<ITransformState>
     /// </summary>
     public override void SimulateController()
     {
-        IRollerBallBoltCommandInput input = RollerBallBoltCommand.Create();
+        IPlayerCommandInput input = PlayerCommand.Create();
 
-        Vector3 data = new Vector3(mouse.x, mouse.y, 0);
-        input.Mouse = data;
+        input.Acceleration = new Vector3(myAcceleration.x, myAcceleration.y, 0);
+        input.AngularAcceleration = myAngularAcceleration;
+        input.GrabInput = myGrabbing;
 
         entity.QueueInput(input);
     }
@@ -64,21 +90,28 @@ public class Player : Bolt.EntityBehaviour<ITransformState>
     /// <param name="resetState">操作権を持っていたらtrue</param>
     public override void ExecuteCommand(Command command, bool resetState)
     {
-        RollerBallBoltCommand cmd = (RollerBallBoltCommand)command;
+        PlayerCommand cmd = (PlayerCommand)command;
 
         if (resetState)
         {
             // Player2。送られてきたコマンドのデータを反映させます
             transform.localPosition = cmd.Result.Position;
+            transform.localEulerAngles = new Vector3(0, 0, cmd.Result.Rotation);
+            sharedGrabbing = cmd.Result.GrabResult;
         }
         else
         {
             // 入力を使ってオブジェクトを動かします
-            force = cmd.Input.Mouse;
+            sharedAcceleration = cmd.Input.Acceleration;
+            sharedAngularAcceleration = cmd.Input.AngularAcceleration;
+            // ブロックをつかんでいるかの判定
+            sharedGrabbing = cmd.Input.GrabInput;
 
             // ホストとクライアントの双方で呼び出されます
             // 現在の座標を送信します
             cmd.Result.Position = transform.localPosition;
+            cmd.Result.Rotation = transform.localEulerAngles.z;
+            cmd.Result.GrabResult = sharedGrabbing;
         }
     }
 

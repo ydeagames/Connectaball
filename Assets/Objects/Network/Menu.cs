@@ -34,7 +34,7 @@ namespace RollerBallBolt
             {
                 string matchName = Guid.NewGuid().ToString();
 
-                BoltNetwork.SetServerInfo(matchName, null);
+                Bolt.Matchmaking.BoltMatchmaking.CreateSession(matchName, null);
                 BoltNetwork.LoadScene(gameSceneName);
             }
         }
