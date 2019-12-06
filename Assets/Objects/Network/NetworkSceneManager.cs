@@ -49,13 +49,13 @@ namespace RollerBallBolt
                 Destroy(go);
             }
 
-            GameObject[] mos = GameObject.FindGameObjectsWithTag("MovingObject");
-            foreach (GameObject mo in mos)
-            {
-                or.position = mo.transform.position;
-                movingObjectPositions.Add(or);
-                Destroy(mo);
-            }
+            //GameObject[] mos = GameObject.FindGameObjectsWithTag("MovingObject");
+            //foreach (GameObject mo in mos)
+            //{
+            //    or.position = mo.transform.position;
+            //    movingObjectPositions.Add(or);
+            //    Destroy(mo);
+            //}
 
             GameObject ball = GameObject.FindGameObjectWithTag("Ball");
             or.position = ball.transform.position;
